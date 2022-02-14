@@ -1,4 +1,4 @@
-name: RecipiesAdder
+name: RecipesAdder
 version: '${version}'
 main: io.github.math0898.recipiesadder.RecipiesAdder
 api-version: 1.18
