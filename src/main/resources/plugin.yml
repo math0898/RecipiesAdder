@@ -1,5 +1,5 @@
 name: RecipesAdder
 version: '${version}'
-main: io.github.math0898.recipiesadder.RecipiesAdder
+main: io.github.math0898.recipesadder.RecipesAdder
 api-version: 1.18
 authors: [ Sugaku ]

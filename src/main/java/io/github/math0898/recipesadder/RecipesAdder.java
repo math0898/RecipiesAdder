@@ -1,4 +1,4 @@
-package io.github.math0898.recipiesadder;
+package io.github.math0898.recipesadder;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,10 +11,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class RecipesAdder extends JavaPlugin {
 
     /**
+     * A static reference to the RecipesAdder instance being used during runtime.
+     */
+    public static JavaPlugin plugin = null;
+
+    /**
      * Called on enable to load the recipes and then register them with spigot so that they can be used in game.
      */
     @Override
     public void onEnable () {
-
+        plugin = this;
     }
 }
