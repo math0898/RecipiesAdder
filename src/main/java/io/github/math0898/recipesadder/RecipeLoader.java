@@ -1,14 +1,15 @@
 package io.github.math0898.recipesadder;
 
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
 import static io.github.math0898.recipesadder.RecipesAdder.plugin;
@@ -19,6 +20,11 @@ import static io.github.math0898.recipesadder.RecipesAdder.plugin;
  * @author Sugaku
  */
 public class RecipeLoader {
+
+    /**
+     * A counter to get the id of recipes with. Used to prevent conflicts that could arise using recipes.size().
+     */
+    private static final AtomicInteger nextId = new AtomicInteger(0);
 
     /**
      * The recipes that have been loaded by this recipe loader.
@@ -41,8 +47,17 @@ public class RecipeLoader {
      * @return A shaped recipe with values pulled from the given configuration section.
      */
     public static ShapedRecipe getShapedRecipe (ConfigurationSection section) {
-        // todo implement me!
-        return null;
+        if (section == null) return null;
+        int amount = 1;
+        Material mat = Material.valueOf(section.getString("target.material"));
+        if (section.contains("target.amount")) amount = section.getInt("target.amount", 1);
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, "recipe" + nextId.getAndIncrement()), new ItemStack(mat, amount));
+        recipe.shape(section.getString("pattern.line1"), section.getString("pattern.line2"), section.getString("pattern.line3"));
+        ConfigurationSection items = section.getConfigurationSection("items");
+        if (items == null) return null;
+        for (String t : items.getKeys(false))
+            recipe.setIngredient(t.toCharArray()[0], new RecipeChoice.MaterialChoice(Material.valueOf(items.getString(t))));
+        return recipe;
     }
 
     public static ShapelessRecipe getShapelessRecipe (ConfigurationSection section) {
@@ -66,8 +81,10 @@ public class RecipeLoader {
         for (String s : config.getKeys(false)) {
             boolean shaped = true;
             if (config.contains(s + ".shaped")) shaped = config.getBoolean(s + ".shaped");
-            if (shaped) recipes.add(getShapedRecipe(config.getConfigurationSection(s)));
-            else recipes.add(getShapelessRecipe(config.getConfigurationSection(s)));
+            Recipe r;
+            if (shaped) r = getShapedRecipe(config.getConfigurationSection(s));
+            else r = getShapelessRecipe(config.getConfigurationSection(s));
+            if (r != null) recipes.add(r);
         }
     }
 }

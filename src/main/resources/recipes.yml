@@ -1,1 +1,14 @@
-# A B C
+trident-recipe:
+  shaped: true
+  target:
+    amount: 1
+    material: 'TRIDENT'
+  pattern:
+    line1: 'DNN'
+    line2: 'IPN'
+    line3: 'PID'
+  items:
+    N: 'NETHERITE_INGOT'
+    D: 'DIAMOND'
+    I: 'IRON_INGOT'
+    P: 'PRISMARINE_SHARD'
