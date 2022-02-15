@@ -61,8 +61,16 @@ public class RecipeLoader {
     }
 
     public static ShapelessRecipe getShapelessRecipe (ConfigurationSection section) {
-        // todo implement me!
-        return null;
+        if (section == null) return null;
+        int amount = 1;
+        Material mat = Material.valueOf(section.getString("target.material"));
+        if (section.contains("target.amount")) amount = section.getInt("target.amount", 1);
+        ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(plugin, "recipe" + nextId.getAndIncrement()), new ItemStack(mat, amount));
+        ConfigurationSection items = section.getConfigurationSection("items");
+        if (items == null) return null;
+        for (String t : items.getKeys(false))
+            recipe.addIngredient(Material.valueOf(items.getString(t)));
+        return recipe;
     }
 
     /**
